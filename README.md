@@ -16,6 +16,12 @@ A modern, type-safe, and extensible navigation coordinator for SwiftUI apps. Sup
 - Full SwiftUI and Observation support
 - Easy integration with DI containers (e.g., Factory)
 
+## Core API
+
+- `append(_ waypoint: Waypoint)`: Navigates to a new destination by adding a waypoint to the navigation stack.
+- `navigateBack()`: Navigates back by removing the last destination from the stack (if not empty).
+- `navigateToRoot()`: Navigates to the root by clearing the entire navigation stack.
+
 ## Installation
 
 Add TMNavigation as a Swift Package dependency in Xcode or via `Package.swift`:
