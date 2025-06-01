@@ -1,0 +1,94 @@
+# Xcode
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/*.xcuserstate
+*.xcodeproj/*.moved-aside
+*.xcodeproj/*.xcuserdatad
+*.xcodeproj/*.xcscmblueprint
+
+# SwiftPM
+.build/
+/.build/
+/.swiftpm/
+
+# DerivedData
+DerivedData/
+
+# Archives
+*.xcarchive
+
+# iOS Simulator
+**/CoreSimulator/Devices/
+
+# User settings
+*.swp
+*.swo
+*.swm
+*.swn
+*.swo
+*.swp
+*.swn
+*.xcuserstate
+*.xcscmblueprint
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Xcode Server
+integration_logs/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Code Coverage
+*.xccoverage
+*.xcresult
+
+# dSYM
+*.dSYM.zip
+*.dSYM
+
+# App Packaging
+*.ipa
+*.app
+
+# Other IDEs
+.idea/
+.vscode/ 
