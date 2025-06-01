@@ -3,7 +3,7 @@
 Modern, type-safe navigation for SwiftUI with Clean Architecture and async support.
 
 > **Important:**
-> Always create and inject your TMCoordinator instance via `.environment(\.coordinator, coordinator)` at the app entry point (e.g., in your App or Scene). Do **not** rely on a default value in EnvironmentKey, as TMCoordinator is @MainActor and must be created on the main thread. This ensures thread safety and correct navigation behavior.
+> In production, always inject your TMCoordinator instance via `.environment(\.coordinator, coordinator)` at the app entry point (e.g., in your App or Scene). This guarantees that all views in your app use the same coordinator instance. The `defaultValue` in EnvironmentKey is only a fallback for SwiftUI previews and tests—**do not rely on it in real app flows**. Never override the coordinator in child views.
 
 A modern, type-safe, and extensible navigation coordinator for SwiftUI apps. Supports generic waypoints, async navigation, and centralized logging.
 
@@ -28,38 +28,44 @@ Add TMNavigation as a Swift Package dependency in Xcode or via `Package.swift`:
 
 ```swift
 import TMNavigation
+import SwiftUI
 
-// 1. Define your Waypoint enum in your app:
-enum AppWaypoint: TMWaypoint {
-    case home, settings, premium
-    @MainActor
-    func view(coordinator: any TMCoordinatorProtocol) -> AnyView {
-        switch self {
-        case .home: return AnyView(HomeView())
-        case .settings: return AnyView(SettingsView())
-        case .premium: return AnyView(PremiumView())
-        }
+@main
+struct TMArchitectureImplementationApp: App {
+  let coordinator = TMCoordinator<AppWaypoint>()
+
+  var body: some Scene {
+    WindowGroup {
+      NavigationStack(path: $coordinator.navigationPath) {
+        TaskListView()
+      }
+      .environment(\.coordinator, coordinator)
+      .navigationDestination(for: TMNavigationDestination.self) { destination in
+        destination.view
+      }
     }
+  }
 }
 
-// 2. Create a TMCoordinator instance:
-let coordinator = TMCoordinator<AppWaypoint>()
-
-// 3. Use in your SwiftUI view:
-struct ContentView: View {
-    @Bindable var coordinator: TMCoordinator<AppWaypoint>
-    var body: some View {
-        NavigationStack(path: $coordinator.navigationPath) {
-            // ...
-        }
-    }
+private struct CoordinatorKey: EnvironmentKey {
+  @MainActor
+  static var defaultValue: TMCoordinator<AppWaypoint> {
+    TMCoordinator<AppWaypoint>() // Safe fallback for previews and tests
+  }
 }
 
-// 4. Navigate:
-coordinator.append(.premium)
+extension EnvironmentValues {
+  var coordinator: TMCoordinator<AppWaypoint> {
+    get { self[CoordinatorKey.self] }
+    set { self[CoordinatorKey.self] = newValue }
+  }
+}
 ```
 
----
+- **Inject the coordinator only once at the top level (App/Scene).**
+- **Do not override .environment(\.coordinator, ...) in child views.**
+- The defaultValue is a safe fallback for SwiftUI previews and tests, but in production you should always inject your coordinator explicitly.
+- **In this architecture, navigationPath contains TMNavigationDestination objects, so .navigationDestination must be for TMNavigationDestination.**
 
 ## Integration Examples
 
@@ -101,7 +107,7 @@ import SwiftUI
 // 1. Define EnvironmentKey for TMCoordinator
 private struct CoordinatorKey: EnvironmentKey {
     static var defaultValue: TMCoordinator<AppWaypoint> {
-        fatalError("TMCoordinator must be injected via .environment(\\.coordinator, ...) in App entry point.")
+        TMCoordinator<AppWaypoint>() // Safe fallback for previews and tests
     }
 }
 extension EnvironmentValues {

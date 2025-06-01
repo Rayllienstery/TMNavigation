@@ -1,5 +1,8 @@
 import Observation
 import SwiftUI
+import os
+
+private let navigationLogger = Logger(subsystem: "TMNavigation", category: "Navigation")
 
 /// A centralized navigation coordinator for TMNavigation.
 ///
@@ -34,7 +37,7 @@ public final class TMCoordinator<Waypoint: TMWaypoint>: TMCoordinatorProtocol {
   ///   ```
   public func append(_ waypoint: Waypoint) {
     if isLoggingEnabled {
-      print("➡️ Routing: \(waypoint)")
+      navigationLogger.info("➡️ Routing: \(String(describing: waypoint))")
     }
     let destination = TMNavigationDestination(view: waypoint.view(coordinator: self))
     self.navigationPath.append(destination)
@@ -44,6 +47,9 @@ public final class TMCoordinator<Waypoint: TMWaypoint>: TMCoordinatorProtocol {
   ///
   /// - Note: Does nothing if the stack is empty.
   public func navigateBack() {
+    if isLoggingEnabled {
+      navigationLogger.info("⬅️ Navigate back")
+    }
     if !navigationPath.isEmpty {
       navigationPath.removeLast()
     }
@@ -53,6 +59,9 @@ public final class TMCoordinator<Waypoint: TMWaypoint>: TMCoordinatorProtocol {
   ///
   /// - Note: Removes all destinations from the stack.
   public func navigateToRoot() {
+    if isLoggingEnabled {
+      navigationLogger.info("🏠 Navigate to root")
+    }
     if !navigationPath.isEmpty {
       navigationPath.removeLast(navigationPath.count)
     }
