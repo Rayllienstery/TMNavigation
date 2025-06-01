@@ -32,17 +32,17 @@ import SwiftUI
 
 @main
 struct TMArchitectureImplementationApp: App {
-  let coordinator = TMCoordinator<AppWaypoint>()
+  @Bindable var coordinator = TMCoordinator<AppWaypoint>()
 
   var body: some Scene {
     WindowGroup {
       NavigationStack(path: $coordinator.navigationPath) {
         TaskListView()
       }
-      .environment(\.coordinator, coordinator)
       .navigationDestination(for: TMNavigationDestination.self) { destination in
         destination.view
       }
+      .environment(\.coordinator, coordinator)
     }
   }
 }
@@ -62,10 +62,8 @@ extension EnvironmentValues {
 }
 ```
 
-- **Inject the coordinator only once at the top level (App/Scene).**
-- **Do not override .environment(\.coordinator, ...) in child views.**
-- The defaultValue is a safe fallback for SwiftUI previews and tests, but in production you should always inject your coordinator explicitly.
-- **In this architecture, navigationPath contains TMNavigationDestination objects, so .navigationDestination must be for TMNavigationDestination.**
+> **Note:**
+> Always apply `.navigationDestination` and `.environment(\.coordinator, ...)` to the `NavigationStack` itself, not to child views. This ensures navigation and environment work correctly for all screens in your app.
 
 ## Integration Examples
 
@@ -143,30 +141,6 @@ struct ContentView: View {
 // 4. Navigate:
 coordinator.append(.premium)
 ```
-
-## Quick Start (Minimal Example)
-
-You can use TMNavigation in a minimal SwiftUI app without a coordinator for simple screens or UI testing:
-
-```swift
-import SwiftUI
-
-@main
-struct TMNavigationApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ScreenAView()
-        }
-    }
-}
-
-public struct ScreenAView: View {
-    public init() {}
-    public var body: some View {
-        Text("A")
-            .accessibilityLabel("A")
-    }
-}
 
 > **Note:** For simple screens or UI tests, you can use a plain SwiftUI view without a navigation coordinator. For advanced navigation flows, use TMCoordinator as described in the main documentation.
 
