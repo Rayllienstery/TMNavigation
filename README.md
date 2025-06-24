@@ -53,6 +53,17 @@ struct TMArchitectureImplementationApp: App {
   }
 }
 
+enum AppWaypoint: TMWaypoint {
+  case SomeScreen
+
+  func view(coordinator: any TMCoordinatorProtocol) -> AnyView {
+    switch self {
+    case .SomeScreen:
+      .init(SomeScreenView())
+    }
+  }
+}
+
 private struct CoordinatorKey: EnvironmentKey {
   @MainActor
   static var defaultValue: TMCoordinator<AppWaypoint> {
