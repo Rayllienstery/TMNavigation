@@ -54,11 +54,11 @@ struct TMArchitectureImplementationApp: App {
 }
 
 enum AppWaypoint: TMWaypoint {
-  case SomeScreen
+  case someScreen
 
   func view(coordinator: any TMCoordinatorProtocol) -> AnyView {
     switch self {
-    case .SomeScreen:
+    case .someScreen:
       .init(SomeScreenView())
     }
   }
