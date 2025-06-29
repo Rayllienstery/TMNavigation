@@ -84,35 +84,6 @@ extension EnvironmentValues {
 
 ## Integration Examples
 
-### Using Factory (Dependency Injection)
-
-```swift
-import TMNavigation
-import FactoryKit
-
-// 1. Define your Waypoint enum as above
-
-// 2. Register TMCoordinator in Factory
-extension Container {
-    var coordinator: Factory<TMCoordinator<AppWaypoint>> {
-        self { TMCoordinator<AppWaypoint>() }.singleton
-    }
-}
-
-// 3. Inject TMCoordinator in your View
-struct ContentView: View {
-    @Injected(\.coordinator) var coordinator: TMCoordinator<AppWaypoint>
-    var body: some View {
-        NavigationStack(path: $coordinator.navigationPath) {
-            // ...
-        }
-    }
-}
-
-// 4. Navigate:
-coordinator.append(.premium)
-```
-
 ### Using Environment
 
 ```swift
